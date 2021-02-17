@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Generic_Download_Library_GDL</RootNamespace>
+    <RootNamespace>GDL</RootNamespace>
   </PropertyGroup>
 
 </Project>
