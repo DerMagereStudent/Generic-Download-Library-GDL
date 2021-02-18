@@ -1,4 +1,7 @@
 ﻿namespace GDL.Data {
+	/// <summary>
+	/// A structure representing a convertible amount of bytes.
+	/// </summary>
 	public struct ContentSize {
 		/// <summary>
 		/// The number of bytes, this object represents.

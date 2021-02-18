@@ -1,6 +1,9 @@
 ﻿using System.Net;
 
 namespace GDL.Data {
+	/// <summary>
+	/// Represents a structure containing every information necessary to connect to given content.
+	/// </summary>
 	public struct ContentLocation {
 		/// <summary>
 		/// The url of the content.
