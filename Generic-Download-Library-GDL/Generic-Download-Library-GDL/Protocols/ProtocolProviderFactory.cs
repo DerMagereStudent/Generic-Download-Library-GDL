@@ -10,7 +10,7 @@ namespace GDL.Protocols {
 		private static Dictionary<Type, Predicate<string>> registeredProtocolProviders;
 
 		static ProtocolProviderFactory() {
-			ProtocolProviderFactory.registeredProtocolProviders = new Dictionary<Type, Predicate<string>>();
+			ProtocolProviderFactory.SetInitialValues();
 		}
 
 		/// <summary>
@@ -21,7 +21,7 @@ namespace GDL.Protocols {
 		/// <param name="overrideCurrent">If and only if true, the current condition of the specified provider will be overridden, if defined.</param>
 		/// <returns>True if there where changes made to the registration. False if wrong paramters or not allowed.</returns>
 		public static bool RegisterProtocolProvider(Type providerType, Predicate<string> condition, bool overrideCurrent = false) {
-			if (providerType is null || condition is null || !typeof(ProtocolProvider).IsAssignableFrom(providerType) || providerType.IsAbstract)
+			if (providerType is null || !typeof(ProtocolProvider).IsAssignableFrom(providerType) || providerType.IsAbstract || condition is null)
 				return false;
 
 			if (ProtocolProviderFactory.registeredProtocolProviders.ContainsKey(providerType) && !overrideCurrent)
@@ -76,13 +76,32 @@ namespace GDL.Protocols {
 		/// <param name="type">The type of the provider.</param>
 		/// <returns>The created provider. Null if the type does not represent a <see cref="ProtocolProvider"/>.</returns>
 		public static ProtocolProvider CreateFromType(Type type) {
-			if (!typeof(ProtocolProvider).IsAssignableFrom(type))
+			if (type is null || !typeof(ProtocolProvider).IsAssignableFrom(type))
 				return null;
 
 			ProtocolProvider provider = Activator.CreateInstance(type) as ProtocolProvider;
 			provider.Initialize();
 
 			return provider;
+		}
+
+		/// <summary>
+		/// Sets the registration to the default types and conditions.
+		/// </summary>
+		public static void SetInitialValues() {
+			ProtocolProviderFactory.ClearRegistration();
+
+			ProtocolProviderFactory.registeredProtocolProviders.Add(
+				typeof(HttpProtocolProvider),
+				url => UrlUtils.IsWellFormedHttpHttps(url)
+			);
+		}
+
+		/// <summary>
+		/// Removes all provider type registrations including default types.
+		/// </summary>
+		public static void ClearRegistration() {
+			ProtocolProviderFactory.registeredProtocolProviders = new Dictionary<Type, Predicate<string>>();
 		}
 	}
 }

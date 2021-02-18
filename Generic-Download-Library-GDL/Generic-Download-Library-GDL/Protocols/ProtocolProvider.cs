@@ -50,6 +50,6 @@ namespace GDL.Protocols {
 		/// <param name="initialPosition">The offset of the stream.</param>
 		/// <param name="endPosition">The end position of the stream.</param>
 		/// <returns>The created stream.</returns>
-		public abstract Stream CreateStream(ContentLocation location);
+		public abstract Stream CreateStream(ContentLocation location, long initialPosition, long endPosition);
 	}
 }
