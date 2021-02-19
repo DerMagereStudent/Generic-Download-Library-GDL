@@ -348,3 +348,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/Generic-Download-Library-GDL/GDL.IntegrationTests/Protocols/Ftp/FtpCredential.cs

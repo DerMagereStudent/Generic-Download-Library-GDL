@@ -11,6 +11,7 @@ namespace GDL.UnitTests.Protocols {
 	public class ProtocolProviderFactoryTests {
 		#region Mocks
 		private class ProtocolProviderMock : ProtocolProvider {
+			public override bool IsValidUrl(string url) => true;
 			public override Stream CreateStream(ContentLocation location, long initialPosition, long endPosition) => null;
 			public override ContentInfo GetContentInfo(ContentLocation location) => null;
 		}

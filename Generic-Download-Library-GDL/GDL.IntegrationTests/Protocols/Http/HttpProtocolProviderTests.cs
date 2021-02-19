@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Net.Sockets;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,12 +16,12 @@ namespace GDL.IntegrationTests.Protocols {
 			provider.Initialize();
 
 			// Act + Assert - 1
-			Stream stream = provider.CreateStream(new ContentLocation(HttpTestData.TxtTestFileUrl, null), -1, -1);
+			Stream stream = provider.CreateStream(new ContentLocation(ProtocolTestData.TxtTestFileUrlHttp, null), -1, -1);
 			Assert.IsNotNull(stream);
 
 			// Act + Assert - 2
 			string content = new StreamReader(stream).ReadToEnd();
-			Assert.AreEqual(content, HttpTestData.TxtTestFileContent);
+			Assert.AreEqual(content, ProtocolTestData.TxtTestFileContent);
 		}
 
 		[TestMethod]
@@ -32,12 +31,12 @@ namespace GDL.IntegrationTests.Protocols {
 			provider.Initialize();
 
 			// Act + Assert - 1
-			Stream stream = provider.CreateStream(new ContentLocation(HttpTestData.TxtTestFileUrl, null), 10, -1);
+			Stream stream = provider.CreateStream(new ContentLocation(ProtocolTestData.TxtTestFileUrlHttp, null), 10, -1);
 			Assert.IsNotNull(stream);
 
 			// Act + Assert - 2
 			string content = new StreamReader(stream).ReadToEnd();
-			Assert.AreEqual(content, HttpTestData.TxtTestFileContent.Substring(10));
+			Assert.AreEqual(content, ProtocolTestData.TxtTestFileContent.Substring(10));
 		}
 
 		[TestMethod]
@@ -49,12 +48,12 @@ namespace GDL.IntegrationTests.Protocols {
 			provider.Initialize();
 
 			// Act + Assert - 1
-			Stream stream = provider.CreateStream(new ContentLocation(HttpTestData.TxtTestFileUrl, null), start, end);
+			Stream stream = provider.CreateStream(new ContentLocation(ProtocolTestData.TxtTestFileUrlHttp, null), start, end);
 			Assert.IsNotNull(stream);
 
 			// Act + Assert - 2
 			string content = new StreamReader(stream).ReadToEnd();
-			Assert.AreEqual(content, HttpTestData.TxtTestFileContent.Substring(start, end - start + 1)); // [10, 15] has length 6. Its not [10, 15[
+			Assert.AreEqual(content, ProtocolTestData.TxtTestFileContent.Substring(start, end - start + 1)); // [10, 15] has length 6. Its not [10, 15[
 		}
 
 		[TestMethod]
@@ -66,29 +65,29 @@ namespace GDL.IntegrationTests.Protocols {
 			provider.Initialize();
 
 			// Act + Assert - 1
-			Stream stream = provider.CreateStream(new ContentLocation(HttpTestData.TxtTestFileUrl, null), start, end);
+			Stream stream = provider.CreateStream(new ContentLocation(ProtocolTestData.TxtTestFileUrlHttp, null), start, end);
 			Assert.IsNotNull(stream);
 
 			// Act + Assert - 2
 			string content = new StreamReader(stream).ReadToEnd();
-			Assert.AreEqual(content, HttpTestData.TxtTestFileContent.Substring(start, 1));
+			Assert.AreEqual(content, ProtocolTestData.TxtTestFileContent.Substring(start, 1));
 		}
 
 		[TestMethod]
 		public void CreateStream__LocationUrlIsValidBoundsAreOutOfRange__ShouldReturnStreamWithWholeContent() {
 			// Arrange
 			int start = -1;
-			int end = HttpTestData.TxtTestFileContent.Length + 1;
+			int end = ProtocolTestData.TxtTestFileContent.Length;
 			HttpProtocolProvider provider = new HttpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert - 1
-			Stream stream = provider.CreateStream(new ContentLocation(HttpTestData.TxtTestFileUrl, null), start, end);
+			Stream stream = provider.CreateStream(new ContentLocation(ProtocolTestData.TxtTestFileUrlHttp, null), start, end);
 			Assert.IsNotNull(stream);
 
 			// Act + Assert - 2
 			string content = new StreamReader(stream).ReadToEnd();
-			Assert.AreEqual(content, HttpTestData.TxtTestFileContent);
+			Assert.AreEqual(content, ProtocolTestData.TxtTestFileContent);
 		}
 		#endregion
 
@@ -100,11 +99,11 @@ namespace GDL.IntegrationTests.Protocols {
 			provider.Initialize();
 
 			// Act + Assert - 1
-			ContentInfo info = provider.GetContentInfo(new ContentLocation(HttpTestData.TxtTestFileUrl, null));
+			ContentInfo info = provider.GetContentInfo(new ContentLocation(ProtocolTestData.TxtTestFileUrlHttp, null));
 			Assert.IsNotNull(info);
 
 			// Assert - 2
-			Assert.AreEqual(info.Size, HttpTestData.TxtTestFileContent.Length);
+			Assert.AreEqual(info.Size, ProtocolTestData.TxtTestFileContent.Length);
 		}
 
 		[TestMethod]
@@ -114,7 +113,7 @@ namespace GDL.IntegrationTests.Protocols {
 			provider.Initialize();
 
 			// Act + Assert - 1
-			ContentInfo info = provider.GetContentInfo(new ContentLocation(HttpTestData.BinTestFile100MBUrl, null));
+			ContentInfo info = provider.GetContentInfo(new ContentLocation(ProtocolTestData.BinTestFile100MBUrlHttp, null));
 			Assert.IsNotNull(info);
 
 			// Assert - 2

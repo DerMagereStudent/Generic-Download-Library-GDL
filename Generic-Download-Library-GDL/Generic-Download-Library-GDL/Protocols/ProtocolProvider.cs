@@ -32,6 +32,13 @@ namespace GDL.Protocols {
 		}
 
 		/// <summary>
+		/// Checks if the given url is a supported url of this provider.
+		/// </summary>
+		/// <param name="url">The url to ckeck.</param>
+		/// <returns>True if the url is supported.</returns>
+		public abstract bool IsValidUrl(string url);
+
+		/// <summary>
 		/// Can be used for initializing the provider. This method is called when this object was created by the <see cref="ProtocolProviderFactory"/>
 		/// </summary>
 		public virtual void Initialize() { }

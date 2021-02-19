@@ -6,36 +6,34 @@ using GDL.Data;
 
 namespace GDL.Protocols {
 	/// <summary>
-	/// Provider that supports HTTP and HTTPS.
+	/// Provider that supports FTP.
 	/// </summary>
-	public class HttpProtocolProvider : ProtocolProvider {
+	public class FtpProtocolProvider : ProtocolProvider {
 		/// <summary>
-		/// Checks if the given url is a supported url of this provider. Format: [http|https]://domain/path?query
+		/// Checks if the given url is a supported url of this provider. Format: ftp://domain/path
 		/// </summary>
 		/// <param name="url">The url to ckeck.</param>
 		/// <returns>True if the url is supported.</returns>
-		public override bool IsValidUrl(string url) => UrlUtils.IsWellFormedHttpHttps(url);
+		public override bool IsValidUrl(string url) => UrlUtils.IsWellFormedFtp(url);
 
 		/// <summary>
 		/// Creates a stream to the content, specified by its <see cref="ContentLocation"/>.
 		/// </summary>
 		/// <param name="location">The location of the content.</param>
 		/// <param name="initialPosition">The offset of the stream.</param>
-		/// <param name="endPosition">The end position of the stream.</param>
+		/// <param name="endPosition">Not supported.</param>
 		/// <returns>The created stream. Null if invalid location.</returns>
 		public override Stream CreateStream(ContentLocation location, long initialPosition, long endPosition) {
 			if (!this.IsValidUrl(location.Url))
 				return null;
 
-			HttpWebRequest request = this.GetRequest(location) as HttpWebRequest;
+			FtpWebRequest request = this.GetRequest(location) as FtpWebRequest;
 			this.FillCredential(request, location.Credential);
 
-			if (initialPosition > 0) {
-				if (endPosition < 0)
-					request.AddRange(initialPosition);
-				else
-					request.AddRange(initialPosition, endPosition);
-			}
+			request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+			if (initialPosition > 0)
+				request.ContentOffset = initialPosition;
 
 			return request.GetResponse().GetResponseStream();
 		}
@@ -49,17 +47,27 @@ namespace GDL.Protocols {
 			if (!this.IsValidUrl(location.Url))
 				return null;
 
-			HttpWebRequest request = this.GetRequest(location) as HttpWebRequest;
+			FtpWebRequest request;
+
+			string contentType = "";
+			DateTime lastModified;
+			ContentSize size;
+
+			request = this.GetRequest(location) as FtpWebRequest;
+			request.Method = WebRequestMethods.Ftp.GetFileSize;
 			this.FillCredential(request, location.Credential);
 
-			HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+			using (FtpWebResponse response = request.GetResponse() as FtpWebResponse)
+				size = response.ContentLength;
 
-			string contentType = response.ContentType;
-			DateTime lastModified = response.LastModified;
-			ContentSize contentSize = response.ContentLength;
-			bool acceptRanges = string.Compare(response.Headers["Accept-Ranges"], "bytes", true) == 0;
+			request = this.GetRequest(location) as FtpWebRequest;
+			request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
+			this.FillCredential(request, location.Credential);
 
-			return new ContentInfo(contentType, acceptRanges, contentSize, lastModified);
+			using (FtpWebResponse response = request.GetResponse() as FtpWebResponse)
+				lastModified = response.LastModified;
+
+			return new ContentInfo(contentType, true, size, lastModified);
 		}
 	}
 }

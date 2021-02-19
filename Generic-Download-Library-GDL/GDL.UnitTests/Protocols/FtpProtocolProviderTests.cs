@@ -5,12 +5,12 @@ using GDL.Protocols;
 
 namespace GDL.UnitTests.Protocols {
 	[TestClass]
-	public class HttpProtocolProviderTests {
+	public class FtpProtocolProviderTests {
 		#region CreateStream
 		[TestMethod]
 		public void CreateStream__LocationUrlIsNull__ShouldReturnNull() {
 			// Arrange
-			HttpProtocolProvider provider = new HttpProtocolProvider();
+			FtpProtocolProvider provider = new FtpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert
@@ -20,21 +20,21 @@ namespace GDL.UnitTests.Protocols {
 		[TestMethod]
 		public void CreateStream__LocationUrlIsNotWellFormed__ShouldReturnNull() {
 			// Arrange
-			HttpProtocolProvider provider = new HttpProtocolProvider();
+			FtpProtocolProvider provider = new FtpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert
-			Assert.IsNull(provider.CreateStream(new ContentLocation("https://?", null), -1, -1));
+			Assert.IsNull(provider.CreateStream(new ContentLocation("ftp://?", null), -1, -1));
 		}
 
 		[TestMethod]
 		public void CreateStream__LocationUrlDefinesWrongProtocol__ShouldReturnNull() {
 			// Arrange
-			HttpProtocolProvider provider = new HttpProtocolProvider();
+			FtpProtocolProvider provider = new FtpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert
-			Assert.IsNull(provider.CreateStream(new ContentLocation("ftp://der-magere-student.com", null), -1, -1));
+			Assert.IsNull(provider.CreateStream(new ContentLocation("http://der-magere-student.com", null), -1, -1));
 		}
 		#endregion
 
@@ -42,7 +42,7 @@ namespace GDL.UnitTests.Protocols {
 		[TestMethod]
 		public void GetContentInfo__LocationUrlIsNull__ShouldReturnNull() {
 			// Arrange
-			HttpProtocolProvider provider = new HttpProtocolProvider();
+			FtpProtocolProvider provider = new FtpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert
@@ -52,21 +52,21 @@ namespace GDL.UnitTests.Protocols {
 		[TestMethod]
 		public void GetContentInfo__LocationUrlIsNotWellFormed__ShouldReturnNull() {
 			// Arrange
-			HttpProtocolProvider provider = new HttpProtocolProvider();
+			FtpProtocolProvider provider = new FtpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert
-			Assert.IsNull(provider.GetContentInfo(new ContentLocation("https://?", null)));
+			Assert.IsNull(provider.GetContentInfo(new ContentLocation("ftp://?", null)));
 		}
 
 		[TestMethod]
 		public void GetContentInfo__LocationUrlDefinesWrongProtocol__ShouldReturnNull() {
 			// Arrange
-			HttpProtocolProvider provider = new HttpProtocolProvider();
+			FtpProtocolProvider provider = new FtpProtocolProvider();
 			provider.Initialize();
 
 			// Act + Assert
-			Assert.IsNull(provider.GetContentInfo(new ContentLocation("ftp://der-magere-student.com", null)));
+			Assert.IsNull(provider.GetContentInfo(new ContentLocation("http://der-magere-student.com", null)));
 		}
 		#endregion
 	}
